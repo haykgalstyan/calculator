@@ -2,9 +2,16 @@ package galstyan.hayk.calculator
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import dagger.hilt.android.AndroidEntryPoint
 import galstyan.hayk.calculator.ui.main.MainFragment
+import javax.inject.Inject
 
-class MainActivity : AppCompatActivity() {
+
+@AndroidEntryPoint
+class AppActivity : AppCompatActivity() {
+
+    @Inject
+    lateinit var logger: Logger
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
