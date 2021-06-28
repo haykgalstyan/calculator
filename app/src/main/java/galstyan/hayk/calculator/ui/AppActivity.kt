@@ -1,25 +1,23 @@
-package galstyan.hayk.calculator
+package galstyan.hayk.calculator.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import dagger.hilt.android.AndroidEntryPoint
+import galstyan.hayk.calculator.Logger
+import galstyan.hayk.calculator.R
 import galstyan.hayk.calculator.ui.main.MainFragment
+import galstyan.hayk.calculator.ui.util.push
 import javax.inject.Inject
 
 
 @AndroidEntryPoint
-class AppActivity : AppCompatActivity() {
+class AppActivity : AppCompatActivity(R.layout.activity_main) {
 
     @Inject
     lateinit var logger: Logger
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.main_activity)
-        if (savedInstanceState == null) {
-            supportFragmentManager.beginTransaction()
-                .replace(R.id.container, MainFragment.newInstance())
-                .commitNow()
-        }
+        if (savedInstanceState == null) push(MainFragment())
     }
 }
