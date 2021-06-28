@@ -10,7 +10,13 @@ import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import galstyan.hayk.calculator.R
 import galstyan.hayk.calculator.databinding.FragmentMainBinding
+import galstyan.hayk.calculator.framework.CalculatorRepoImpl
 import galstyan.hayk.calculator.ui.ViewBindingFragment
+import galstyan.hayk.core.domain.usecase.Add
+import galstyan.hayk.core.domain.usecase.Operation
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
+import kotlin.coroutines.coroutineContext
 
 
 @AndroidEntryPoint
@@ -24,5 +30,7 @@ class MainFragment : ViewBindingFragment<FragmentMainBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+
+        val a: Operation = Add(CalculatorRepoImpl())
     }
 }

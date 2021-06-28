@@ -4,9 +4,10 @@ import galstyan.hayk.core.domain.entity.CalculationResult
 
 
 interface CalculationRepository {
-    suspend fun add(): CalculationResult
-    suspend fun subtract(): CalculationResult
-    suspend fun divide(): CalculationResult
-    suspend fun multiply(): CalculationResult
-    suspend fun clearAll(): CalculationResult
+    suspend fun add()
+    suspend fun subtract()
+    suspend fun divide()
+    suspend fun multiply()
+    suspend fun clearAll()
+    suspend fun execute(): CalculationResult
 }
