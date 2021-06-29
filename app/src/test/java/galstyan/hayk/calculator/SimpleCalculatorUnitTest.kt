@@ -8,11 +8,7 @@ import org.junit.Test
 import org.junit.Assert.*
 import java.math.BigDecimal
 
-/**
- * Example local unit test, which will execute on the development machine (host).
- *
- * See [testing documentation](http://d.android.com/tools/testing).
- */
+
 class SimpleCalculatorUnitTest {
 
     private val calculator = CalculatorSimple()
@@ -23,6 +19,7 @@ class SimpleCalculatorUnitTest {
         calculator.add(Add(BigDecimal.valueOf(5)))
         val result = calculator.executeWith(BigDecimal.valueOf(5))
 
+        // 10 + 5 + 5 = 20
         assertEquals(result, BigDecimal.valueOf(20))
     }
 
@@ -32,6 +29,7 @@ class SimpleCalculatorUnitTest {
         calculator.add(Subtract(BigDecimal.valueOf(5)))
         val result = calculator.executeWith(BigDecimal.valueOf(5))
 
+        // 20 - 5 - 5 = 10
         assertEquals(result, BigDecimal.valueOf(10))
     }
 
@@ -41,6 +39,7 @@ class SimpleCalculatorUnitTest {
         calculator.add(Multiply(BigDecimal.valueOf(10)))
         val result = calculator.executeWith(BigDecimal.valueOf(10))
 
+        // 10 * 10 * 10 = 1000
         assertEquals(result, BigDecimal.valueOf(1000))
     }
 
@@ -50,6 +49,7 @@ class SimpleCalculatorUnitTest {
         calculator.add(Divide(BigDecimal.valueOf(10)))
         val result = calculator.executeWith(BigDecimal.valueOf(10))
 
+        // 1000 / 10 / 10 = 10
         assertEquals(result, BigDecimal.valueOf(10))
     }
 
