@@ -83,4 +83,14 @@ class SimpleCalculatorUnitTest {
         assertEquals(result, BigDecimal.valueOf(20))
     }
 
+
+    @Test
+    fun operationCopy_isCorrect() {
+        val op1 = Add(BigDecimal.valueOf(10))
+        val op2 = op1.copy(BigDecimal.valueOf(10))
+
+        assertEquals(op1.javaClass, op2.javaClass)
+        assertEquals(op1.left, op2.left)
+    }
+
 }
