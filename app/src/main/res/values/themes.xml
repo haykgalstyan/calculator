@@ -35,6 +35,7 @@
 
         <!-- Applying our CardView style to all instances -->
         <item name="materialCardViewStyle">@style/Widget.AppTheme.CardView</item>
+        <item name="materialButtonStyle">@style/Widget.AppTheme.Button</item>
 
     </style>
 
@@ -43,6 +44,10 @@
     <style name="Widget.AppTheme.CardView" parent="Widget.MaterialComponents.CardView">
         <item name="strokeColor">#000000</item>
         <item name="strokeWidth">1dp</item>
+    </style>
+
+    <style name="Widget.AppTheme.Button" parent="Widget.MaterialComponents.Button">
+        <item name="background">@null</item>
     </style>
 
 </resources>
