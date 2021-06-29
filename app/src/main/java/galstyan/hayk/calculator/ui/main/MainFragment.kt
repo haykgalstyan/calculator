@@ -7,10 +7,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import galstyan.hayk.calculator.databinding.FragmentMainBinding
-import galstyan.hayk.calculator.framework.AndroidCalculator
 import galstyan.hayk.calculator.ui.ViewBindingFragment
-import galstyan.hayk.core.domain.usecase.Addition
-import galstyan.hayk.core.domain.entity.Operation
 
 
 @AndroidEntryPoint
@@ -24,7 +21,8 @@ class MainFragment : ViewBindingFragment<FragmentMainBinding>() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel.initCalculator()
 
-        val a: Operation = Addition(AndroidCalculator())
+
     }
 }
