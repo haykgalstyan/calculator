@@ -29,7 +29,6 @@ class CalculatorViewModel @Inject constructor(
     private val _operationsText = MutableLiveData("")
     val operationsText: LiveData<String> get() = _operationsText
 
-
     private val numberInputBuffer = StringBuilder()
 
 
@@ -39,13 +38,8 @@ class CalculatorViewModel @Inject constructor(
 
 
     fun onAction(action: Action) {
-        // what to do on add action if inputBuff is empty?
-        // it gets empty when: execute, after onAction (this one is ok)
-
-        // todo: fail fast if input number buffer is empty?
-
-        val op = parseInputWithActionAsOperation(action, true)
-        op?.let { addOperation(it) } // fixme: else?
+        val operation = parseInputWithActionAsOperation(action, true)
+        operation?.let { addOperation(it) }
     }
 
 
@@ -53,82 +47,41 @@ class CalculatorViewModel @Inject constructor(
         parseInputAsNumber(false)?.let {
             val result = calculator.executeWith(it)
             _resultText.value = result.toString()
-
-            logger.log("executeCalculation -> _operationsText before", _operationsText.value)
-
-            val t = _operationsText.value
-            _operationsText.value = "$t"
-
-            logger.log("executeCalculation -> _operationsText after", _operationsText.value)
+            _operationsText.value = _operationsText.value
         }
     }
 
 
     fun clearAll() {
         calculator.clear()
-
         _resultText.value = ""
         _operationsText.value = ""
     }
 
 
     private fun addNumber(input: String) {
-        logger.log("addNumber", input)
-
         numberInputBuffer.append(input)
-
-        logger.log("addNumber -> _operationsText before", _operationsText.value)
-
-        val t = _operationsText.value
-        _operationsText.value = "$t$input"
-
-        logger.log("addNumber -> _operationsText after", _operationsText.value)
+        _operationsText.value = "${_operationsText.value}$input"
     }
 
 
     private fun addOperation(operation: Operation) {
-        logger.log("addOperation", operation.toString())
-
         calculator.add(operation)
-
-        logger.log("addOperation -> _operationsText before", _operationsText.value)
-
-        val t = _operationsText.value
-        _operationsText.value = "$t${operation.asString()}"
-
-        logger.log("addOperation -> _operationsText after", _operationsText.value)
+        _operationsText.value = "${_operationsText.value}${operation.asString()}"
     }
 
 
-    private fun parseInputWithActionAsOperation(
-        action: Action,
-        cleanInputBuffer: Boolean
-    ): Operation? {
-        logger.log(
-            "parseInputWithActionAsOperation -> _operationsText after",
-            _operationsText.value
-        )
-
-        return parseInputAsNumber(cleanInputBuffer)?.let {
-            createOperation(action, it)
-        }
+    private fun parseInputWithActionAsOperation(action: Action): Operation? {
+        return parseInputAsNumber(true)?.let { createOperation(action, it) }
     }
 
 
     private fun parseInputAsNumber(cleanInputBuffer: Boolean): BigDecimal? {
         val input = numberInputBuffer.toString()
-
-        logger.log("parseInputAsNumber -> cleaning input: $cleanInputBuffer", input)
-        if (cleanInputBuffer)
-            numberInputBuffer.clear()
-
+        if (cleanInputBuffer) numberInputBuffer.clear()
         return try {
-            logger.log("parseInputAsNumber -> try", input)
-
             input.toBigDecimal()
         } catch (e: NumberFormatException) {
-            logger.log("parseInputAsNumber -> try FAIL", input)
-
             null
         }
     }
@@ -143,21 +96,11 @@ class CalculatorViewModel @Inject constructor(
     }
 
 
-    private fun Action.asString(): String =
-        when (this) {
-            Add::class -> "+"
-            Subtract::class -> "-"
-            Multiply::class -> "*"
-            Divide::class -> "/"
-            else -> ""
-        }
-
-    private fun Operation.asString(): String =
-        when (this) {
-            is Add -> "+"
-            is Subtract -> "-"
-            is Multiply -> "*"
-            is Divide -> "/"
-            else -> ""
-        }
+    private fun Operation.asString(): String = when (this) {
+        is Add -> "+"
+        is Subtract -> "-"
+        is Multiply -> "*"
+        is Divide -> "/"
+        else -> ""
+    }
 }
