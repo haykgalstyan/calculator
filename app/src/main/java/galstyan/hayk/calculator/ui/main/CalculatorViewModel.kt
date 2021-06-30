@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import galstyan.hayk.calculator.Logger
 import galstyan.hayk.calculator.domain.*
+import java.lang.IllegalStateException
 import java.lang.NumberFormatException
 import java.math.BigDecimal
 import javax.inject.Inject
@@ -15,13 +16,11 @@ import kotlin.text.StringBuilder
 
 typealias Action = KClass<*>
 
-
 @HiltViewModel
 class CalculatorViewModel @Inject constructor(
     val logger: Logger,
     val calculator: Calculator,
 ) : ViewModel() {
-
 
     private val _resultText = MutableLiveData("")
     val resultText: LiveData<String> get() = _resultText
@@ -36,12 +35,10 @@ class CalculatorViewModel @Inject constructor(
         addNumber(numberInput)
     }
 
-
     fun onAction(action: Action) {
         val operation = parseInputWithActionAsOperation(action, true)
         operation?.let { addOperation(it) }
     }
-
 
     fun executeCalculation() {
         parseInputAsNumber(false)?.let {
@@ -50,7 +47,6 @@ class CalculatorViewModel @Inject constructor(
             _operationsText.value = _operationsText.value
         }
     }
-
 
     fun clearAll() {
         calculator.clear()
@@ -64,12 +60,10 @@ class CalculatorViewModel @Inject constructor(
         _operationsText.value = "${_operationsText.value}$input"
     }
 
-
     private fun addOperation(operation: Operation) {
         calculator.add(operation)
         _operationsText.value = "${_operationsText.value}${operation.asString()}"
     }
-
 
     private fun parseInputWithActionAsOperation(
         action: Action,
@@ -77,7 +71,6 @@ class CalculatorViewModel @Inject constructor(
     ): Operation? {
         return parseInputAsNumber(cleanInputBuffer)?.let { createOperation(action, it) }
     }
-
 
     private fun parseInputAsNumber(cleanInputBuffer: Boolean): BigDecimal? {
         val input = numberInputBuffer.toString()
@@ -89,7 +82,6 @@ class CalculatorViewModel @Inject constructor(
         }
     }
 
-
     private fun createOperation(action: Action, leftValue: BigDecimal) = when (action) {
         Add::class -> Add(leftValue)
         Subtract::class -> Subtract(leftValue)
@@ -98,12 +90,11 @@ class CalculatorViewModel @Inject constructor(
         else -> throw IllegalArgumentException("$action is not a supported action")
     }
 
-
     private fun Operation.asString(): String = when (this) {
         is Add -> "+"
         is Subtract -> "-"
         is Multiply -> "*"
         is Divide -> "/"
-        else -> ""
+        else -> throw IllegalStateException("Operation.asString() not supported on $this")
     }
 }
