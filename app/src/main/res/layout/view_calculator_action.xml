@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.google.android.material.button.MaterialButton xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/action"
+    android:layout_width="0dp"
+    android:layout_height="0dp"
+    android:layout_rowWeight="1"
+    android:layout_columnWeight="1"
+    android:layout_gravity="fill"
+    android:layout_margin="4dp"
+    android:gravity="center"
+    android:textAppearance="@style/TextAppearance.MaterialComponents.Headline4"
+    android:textColor="@color/white"
+    tools:text="/" />
