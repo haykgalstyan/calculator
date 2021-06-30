@@ -15,6 +15,7 @@ import kotlin.text.StringBuilder
 
 typealias Action = KClass<*>
 
+
 @HiltViewModel
 class CalculatorViewModel @Inject constructor(
     val logger: Logger,
@@ -22,10 +23,10 @@ class CalculatorViewModel @Inject constructor(
 ) : ViewModel() {
 
 
-    private val _resultText = MutableLiveData<String>()
+    private val _resultText = MutableLiveData("")
     val resultText: LiveData<String> get() = _resultText
 
-    private val _operationsText = MutableLiveData<String>()
+    private val _operationsText = MutableLiveData("")
     val operationsText: LiveData<String> get() = _operationsText
 
 
@@ -38,51 +39,70 @@ class CalculatorViewModel @Inject constructor(
 
 
     fun onAction(action: Action) {
+        // todo: fail fast if input number buffer is empty?
+
         val op = parseInputWithActionAsOperation(action)
-        op?.let { addOperation(it) }
+        op?.let { addOperation(it) } // fixme: else?
     }
 
 
     fun executeCalculation() {
         parseInputAsNumber()?.let {
             val result = calculator.executeWith(it)
-            updateResultText(result)
+            _resultText.value = result.toString()
+
+            logger.log("executeCalculation -> _operationsText before", _operationsText.value)
+
+            val t = _operationsText.value
+            _operationsText.value = "$t "
+
+            logger.log("executeCalculation -> _operationsText after", _operationsText.value)
         }
     }
 
 
     fun clearAll() {
         calculator.clear()
-        updateOperationsText()
-        updateResultText(null)
+
+        _resultText.value = ""
+        _operationsText.value = ""
     }
 
 
     private fun addNumber(input: String) {
+        logger.log("addNumber", input)
+
         numberInputBuffer.append(input)
-        updateOperationsText()
+
+        logger.log("addNumber -> _operationsText before", _operationsText.value)
+
+        val t = _operationsText.value
+        _operationsText.value = "$t$input"
+
+        logger.log("addNumber -> _operationsText after", _operationsText.value)
     }
 
 
     private fun addOperation(operation: Operation) {
+        logger.log("addOperation", operation.toString())
+
         calculator.add(operation)
-        updateOperationsText()
-    }
 
+        logger.log("addOperation -> _operationsText before", _operationsText.value)
 
-    private fun updateResultText(value: BigDecimal?) {
-        _resultText.value = value?.toString() ?: ""
-    }
+        val t = _operationsText.value
+        _operationsText.value = "$t${operation.asString()}"
 
-
-    private fun updateOperationsText() {
-        _operationsText.value = calculator.getOperations().joinToString {
-            "${it.left} ${it::class.asString()} "
-        }
+        logger.log("addOperation -> _operationsText after", _operationsText.value)
     }
 
 
     private fun parseInputWithActionAsOperation(action: Action): Operation? {
+        logger.log(
+            "parseInputWithActionAsOperation -> _operationsText after",
+            _operationsText.value
+        )
+
         return parseInputAsNumber()?.let {
             createOperation(action, it)
         }
@@ -91,10 +111,17 @@ class CalculatorViewModel @Inject constructor(
 
     private fun parseInputAsNumber(): BigDecimal? {
         val input = numberInputBuffer.toString()
+
+        logger.log("parseInputAsNumber -> cleaning input", input)
         numberInputBuffer.clear()
+
         return try {
+            logger.log("parseInputAsNumber -> try", input)
+
             input.toBigDecimal()
         } catch (e: NumberFormatException) {
+            logger.log("parseInputAsNumber -> try FAIL", input)
+
             null
         }
     }
@@ -115,6 +142,15 @@ class CalculatorViewModel @Inject constructor(
             Subtract::class -> "-"
             Multiply::class -> "*"
             Divide::class -> "/"
+            else -> ""
+        }
+
+    private fun Operation.asString(): String =
+        when (this) {
+            is Add -> "+"
+            is Subtract -> "-"
+            is Multiply -> "*"
+            is Divide -> "/"
             else -> ""
         }
 }
