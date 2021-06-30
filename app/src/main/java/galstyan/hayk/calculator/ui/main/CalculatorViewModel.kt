@@ -71,8 +71,11 @@ class CalculatorViewModel @Inject constructor(
     }
 
 
-    private fun parseInputWithActionAsOperation(action: Action): Operation? {
-        return parseInputAsNumber(true)?.let { createOperation(action, it) }
+    private fun parseInputWithActionAsOperation(
+        action: Action,
+        cleanInputBuffer: Boolean
+    ): Operation? {
+        return parseInputAsNumber(cleanInputBuffer)?.let { createOperation(action, it) }
     }
 
 
