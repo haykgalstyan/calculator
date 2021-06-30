@@ -39,22 +39,25 @@ class CalculatorViewModel @Inject constructor(
 
 
     fun onAction(action: Action) {
+        // what to do on add action if inputBuff is empty?
+        // it gets empty when: execute, after onAction (this one is ok)
+
         // todo: fail fast if input number buffer is empty?
 
-        val op = parseInputWithActionAsOperation(action)
+        val op = parseInputWithActionAsOperation(action, true)
         op?.let { addOperation(it) } // fixme: else?
     }
 
 
     fun executeCalculation() {
-        parseInputAsNumber()?.let {
+        parseInputAsNumber(false)?.let {
             val result = calculator.executeWith(it)
             _resultText.value = result.toString()
 
             logger.log("executeCalculation -> _operationsText before", _operationsText.value)
 
             val t = _operationsText.value
-            _operationsText.value = "$t "
+            _operationsText.value = "$t"
 
             logger.log("executeCalculation -> _operationsText after", _operationsText.value)
         }
@@ -97,23 +100,27 @@ class CalculatorViewModel @Inject constructor(
     }
 
 
-    private fun parseInputWithActionAsOperation(action: Action): Operation? {
+    private fun parseInputWithActionAsOperation(
+        action: Action,
+        cleanInputBuffer: Boolean
+    ): Operation? {
         logger.log(
             "parseInputWithActionAsOperation -> _operationsText after",
             _operationsText.value
         )
 
-        return parseInputAsNumber()?.let {
+        return parseInputAsNumber(cleanInputBuffer)?.let {
             createOperation(action, it)
         }
     }
 
 
-    private fun parseInputAsNumber(): BigDecimal? {
+    private fun parseInputAsNumber(cleanInputBuffer: Boolean): BigDecimal? {
         val input = numberInputBuffer.toString()
 
-        logger.log("parseInputAsNumber -> cleaning input", input)
-        numberInputBuffer.clear()
+        logger.log("parseInputAsNumber -> cleaning input: $cleanInputBuffer", input)
+        if (cleanInputBuffer)
+            numberInputBuffer.clear()
 
         return try {
             logger.log("parseInputAsNumber -> try", input)
