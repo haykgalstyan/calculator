@@ -33,36 +33,33 @@ class CalculatorFragment : ViewBindingFragment<FragmentCalculatorBinding>() {
     }
 
 
-    data class Action(val text: String, val action: () -> Unit)
+    data class UiAction(val text: String, val action: () -> Unit)
 
 
-    private fun createActionsList(): List<Action> {
-        val actions = ArrayList<Action>()
-        actions.add(Action("7", action = { viewModel.onNumber("7") }))
-        actions.add(Action("8", action = { viewModel.onNumber("8") }))
-        actions.add(Action("9", action = { viewModel.onNumber("9") }))
-        actions.add(Action("+", action = { viewModel.onAction(Add::class) }))
+    private fun createActionsList() = ArrayList<UiAction>().apply {
+        add(UiAction("7") { viewModel.onNumber("7") })
+        add(UiAction("8") { viewModel.onNumber("8") })
+        add(UiAction("9") { viewModel.onNumber("9") })
+        add(UiAction("+") { viewModel.onAction(Add::class) })
 
-        actions.add(Action("4", action = { viewModel.onNumber("4") }))
-        actions.add(Action("5", action = { viewModel.onNumber("5") }))
-        actions.add(Action("6", action = { viewModel.onNumber("6") }))
-        actions.add(Action("-", action = { viewModel.onAction(Subtract::class) }))
+        add(UiAction("4") { viewModel.onNumber("4") })
+        add(UiAction("5") { viewModel.onNumber("5") })
+        add(UiAction("6") { viewModel.onNumber("6") })
+        add(UiAction("-") { viewModel.onAction(Subtract::class) })
 
-        actions.add(Action("1", action = { viewModel.onNumber("1") }))
-        actions.add(Action("2", action = { viewModel.onNumber("2") }))
-        actions.add(Action("3", action = { viewModel.onNumber("3") }))
-        actions.add(Action("*", action = { viewModel.onAction(Multiply::class) }))
+        add(UiAction("1") { viewModel.onNumber("1") })
+        add(UiAction("2") { viewModel.onNumber("2") })
+        add(UiAction("3") { viewModel.onNumber("3") })
+        add(UiAction("*") { viewModel.onAction(Multiply::class) })
 
-        actions.add(Action("AC", action = { viewModel.clearAll() }))
-        actions.add(Action("0", action = { viewModel.onNumber("0") }))
-        actions.add(Action("=", action = { viewModel.executeCalculation() }))
-        actions.add(Action("/", action = { viewModel.onAction(Divide::class) }))
-
-        return actions
+        add(UiAction("AC") { viewModel.clearAll() })
+        add(UiAction("0") { viewModel.onNumber("0") })
+        add(UiAction("=") { viewModel.executeCalculation() })
+        add(UiAction("/") { viewModel.onAction(Divide::class) })
     }
 
 
-    private fun addCalculatorActionViews(actions: List<Action>) {
+    private fun addCalculatorActionViews(actions: List<UiAction>) {
         actions.forEach { action ->
             val vbAction = ViewCalculatorActionBinding.inflate(layoutInflater)
             vbAction.action.text = action.text

@@ -36,15 +36,14 @@ class CalculatorViewModel @Inject constructor(
     }
 
     fun onAction(action: Action) {
-        val operation = parseInputWithActionAsOperation(action, true)
-        operation?.let { addOperation(it) }
+        parseInputWithActionAsOperation(action, true)?.let {
+            addOperation(it)
+        }
     }
 
     fun executeCalculation() {
         parseInputAsNumber(false)?.let {
-            val result = calculator.executeWith(it)
-            _resultText.value = result.toString()
-            _operationsText.value = _operationsText.value
+            _resultText.value = calculator.executeWith(it).toString()
         }
     }
 
@@ -57,12 +56,12 @@ class CalculatorViewModel @Inject constructor(
 
     private fun addNumber(input: String) {
         numberInputBuffer.append(input)
-        _operationsText.value = "${_operationsText.value}$input"
+        _operationsText.value = _operationsText.value + input
     }
 
     private fun addOperation(operation: Operation) {
         calculator.add(operation)
-        _operationsText.value = "${_operationsText.value}${operation.asString()}"
+        _operationsText.value = _operationsText.value + operation.asString()
     }
 
     private fun parseInputWithActionAsOperation(

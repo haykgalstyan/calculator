@@ -11,14 +11,6 @@ class CalculatorSimple(
         operations.add(operation)
     }
 
-    override fun add(operations: List<Operation>) {
-        this.operations.addAll(operations)
-    }
-
-    override fun getOperations(): List<Operation> {
-        return operations.toList()
-    }
-
     override fun clear() {
         operations.clear()
     }
