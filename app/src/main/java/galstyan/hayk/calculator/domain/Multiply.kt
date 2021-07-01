@@ -6,4 +6,5 @@ import java.math.BigDecimal
 class Multiply(left: BigDecimal) : Operation(left) {
     override fun invoke(right: BigDecimal) = left * right
     override fun copy(left: BigDecimal) = Multiply(left)
+    override fun toString() = "Operation: ${javaClass.simpleName}, left: $left "
 }

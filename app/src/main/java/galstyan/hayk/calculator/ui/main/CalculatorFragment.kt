@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.viewModels
 import dagger.hilt.android.AndroidEntryPoint
 import galstyan.hayk.calculator.databinding.FragmentCalculatorBinding
@@ -13,6 +14,7 @@ import galstyan.hayk.calculator.domain.Divide
 import galstyan.hayk.calculator.domain.Multiply
 import galstyan.hayk.calculator.domain.Subtract
 import galstyan.hayk.calculator.ui.ViewBindingFragment
+import galstyan.hayk.calculator.ui.util.toast
 
 
 @AndroidEntryPoint
@@ -30,6 +32,7 @@ class CalculatorFragment : ViewBindingFragment<FragmentCalculatorBinding>() {
 
         viewModel.operationsText.observe(viewLifecycleOwner, { binding.input.text = it })
         viewModel.resultText.observe(viewLifecycleOwner, { binding.output.text = it })
+        viewModel.resultError.observe(viewLifecycleOwner, { toast(it?.message ?: "Error") })
     }
 
 

@@ -6,6 +6,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Test
 
 import org.junit.Assert.*
+import java.lang.ArithmeticException
 import java.math.BigDecimal
 
 
@@ -57,6 +58,39 @@ class SimpleCalculatorUnitTest {
 
 
     @Test
+    fun divisionByZero_throws() = with(CalculatorSimple()) {
+        add(Divide(BigDecimal.ONE))
+        assertThrows(ArithmeticException::class.java) {
+            executeWith(BigDecimal.ZERO)
+        }
+        Unit
+    }
+
+
+    @Test
+    fun divisionOneByThree_isCorrect() = with(CalculatorSimple()) {
+        add(Divide(BigDecimal.ONE, scale = 12))
+        val result = executeWith(BigDecimal.valueOf(3))
+
+        assertEquals(result, BigDecimal.valueOf(0.333_333_333_333))
+
+        clear()
+
+        add(Divide(BigDecimal.ONE))
+        val result2 = executeWith(BigDecimal.valueOf(3))
+
+        assertTrue(result2 > BigDecimal.ZERO)
+    }
+
+
+    @Test
+    fun emptyExecute() = with(CalculatorSimple()) {
+        executeWith(BigDecimal.ZERO)
+        Unit
+    }
+
+
+    @Test
     fun allOperations_isCorrect() = with(CalculatorSimple()) {
         add(Add(BigDecimal.valueOf(10)))
         add(Subtract(BigDecimal.valueOf(10)))
@@ -92,5 +126,4 @@ class SimpleCalculatorUnitTest {
         assertEquals(op1.javaClass, op2.javaClass)
         assertEquals(op1.left, op2.left)
     }
-
 }

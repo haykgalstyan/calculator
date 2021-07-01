@@ -6,6 +6,8 @@ import androidx.lifecycle.ViewModel
 import dagger.hilt.android.lifecycle.HiltViewModel
 import galstyan.hayk.calculator.Logger
 import galstyan.hayk.calculator.domain.*
+import java.lang.ArithmeticException
+import java.lang.Exception
 import java.lang.IllegalStateException
 import java.lang.NumberFormatException
 import java.math.BigDecimal
@@ -28,6 +30,9 @@ class CalculatorViewModel @Inject constructor(
     private val _operationsText = MutableLiveData("")
     val operationsText: LiveData<String> get() = _operationsText
 
+    private val _resultError: MutableLiveData<Exception?> = MutableLiveData()
+    val resultError: LiveData<Exception?> get() = _resultError
+
     private val numberInputBuffer = StringBuilder()
 
 
@@ -43,7 +48,7 @@ class CalculatorViewModel @Inject constructor(
 
     fun executeCalculation() {
         parseInputAsNumber(false)?.let {
-            _resultText.value = calculator.executeWith(it).toString()
+            calculate(it)
         }
     }
 
@@ -51,8 +56,19 @@ class CalculatorViewModel @Inject constructor(
         calculator.clear()
         _resultText.value = ""
         _operationsText.value = ""
+        numberInputBuffer.clear()
     }
 
+
+    private fun calculate(it: BigDecimal) {
+        try {
+            val result = calculator.executeWith(it)
+            _resultText.value = result.toString()
+        } catch (e: ArithmeticException) {
+            _resultError.value = e
+            clearAll()
+        }
+    }
 
     private fun addNumber(input: String) {
         numberInputBuffer.append(input)

@@ -1,5 +1,7 @@
 package galstyan.hayk.calculator.domain
 
+
+import java.lang.ArithmeticException
 import java.math.BigDecimal
 import kotlin.collections.ArrayList
 
@@ -16,11 +18,16 @@ class CalculatorSimple(
     }
 
     override fun executeWith(lastValue: BigDecimal): BigDecimal {
+        if (operations.isEmpty())
+            return lastValue
+
         var result: BigDecimal = operations.first().left
+
         operations.forEachIndexed { index, operation ->
             val right: BigDecimal = operations.getOrNull(index + 1)?.left ?: lastValue
             result = operation.copy(result).invoke(right)
         }
+
         return result
     }
 }
