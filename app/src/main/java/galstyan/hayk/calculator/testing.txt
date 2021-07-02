@@ -1,3 +1,9 @@
+* Terminology
+JUnit - the most popular and widely-used unit testing framework for Java
+Jupiter - JUnit 5 version (latest as of 2021)
+Mockito - for mocking (Non android) objects for unit tests
+Roboelectric = for mocking android objects for unit and integration tests
+Espresso - android UI testing framework
 
 
 * Unit tests (junit)
@@ -9,4 +15,4 @@ Unit tests are written using junit. Its the only thing needed if code to be unit
  If you have dependencies on the Android framework, particularly those that create complex interactions with the framework, it's better to include framework dependencies using Robolectric.
  If your tests have minimal dependencies on the Android framework, or if the tests depend only on your own objects, it's fine to include mock dependencies using a mocking framework like Mockito."
 
-So if no android dependencies use Mockito, in other case Robolectric.
+So in summary if no android dependencies use Mockito, in other case Robolectric.
