@@ -2,15 +2,14 @@ package galstyan.hayk.calculator
 
 
 import galstyan.hayk.calculator.domain.*
-import kotlinx.coroutines.runBlocking
 import org.junit.Test
-
 import org.junit.Assert.*
 import java.lang.ArithmeticException
 import java.math.BigDecimal
 
 
 class SimpleCalculatorUnitTest {
+
 
 
     @Test
@@ -84,7 +83,7 @@ class SimpleCalculatorUnitTest {
 
 
     @Test
-    fun emptyExecute() = with(CalculatorSimple()) {
+    fun emptyExecute_isCorrect() = with(CalculatorSimple()) {
         executeWith(BigDecimal.ZERO)
         Unit
     }
@@ -110,6 +109,7 @@ class SimpleCalculatorUnitTest {
         add(Add(BigDecimal.valueOf(10)))
         add(Add(BigDecimal.valueOf(10)))
         clear()
+
         add(Add(BigDecimal.valueOf(10)))
         val result = executeWith(BigDecimal.valueOf(10))
 
